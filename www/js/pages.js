@@ -8,7 +8,7 @@ import {
 import {
   getTransactions, getBudgets, getSettings, saveBudget, deleteBudget, saveTransaction,
   deleteTransaction, clearAllData, exportData, importData,
-  getUserProfile, saveUserProfile,
+  getUserProfile, saveUserProfile, getTotalBudget, saveTotalBudget,
 } from './data.js';
 
 // ===== Shared header helpers =====
@@ -71,7 +71,7 @@ export async function renderOnboarding(state) {
 // ===== Home =====
 export async function renderHome(state) {
   const transactions = await getTransactions();
-  const budgets = await getBudgets();
+  const totalBudget = await getTotalBudget();
   const currentMonth = state.month || new Date();
   const start = firstDayOfMonth(currentMonth);
   const end = lastDayOfMonth(currentMonth);
@@ -88,6 +88,11 @@ export async function renderHome(state) {
   const recent = transactions.slice().sort((a, b) => new Date(b.date + 'T' + (b.time || '00:00')) - new Date(a.date + 'T' + (a.time || '00:00'))).slice(0, 5);
 
   const today = new Date();
+
+  const totalSpent = expense;
+  const totalPct = totalBudget > 0 ? Math.min(100, Math.round((totalSpent / totalBudget) * 100)) : 0;
+  const totalRemain = totalBudget - totalSpent;
+  const budgetWarning = totalBudget > 0 && totalPct >= 80;
 
   let html = `
     <div class="home-header nb-animate-pop">
@@ -122,9 +127,31 @@ export async function renderHome(state) {
     </section>
 
     <section>
-      <h2 class="section-title nb-animate-pop nb-delay-2">预算进度</h2>
+      <h2 class="section-title nb-animate-pop nb-delay-2">月预算进度</h2>
       <div class="nb-animate-pop nb-delay-3">
-        ${budgets.length === 0 ? '<p style="color:var(--bb-gray);font-size:13px;">暂无预算，去统计页设置</p>' : budgets.map(b => renderBudgetCard(b, monthly)).join('')}
+        ${totalBudget > 0 ? `
+          <div class="budget-card home-budget-card" data-action="nav" data-target="budget">
+            <div class="budget-card-header">
+              <div class="budget-card-info">
+                <div class="icon-circle" style="background:rgba(155,139,244,0.15);">
+                  ${icon('wallet', { size: 18, color: 'var(--bb-purple)' })}
+                </div>
+                <span class="budget-card-name">月预算</span>
+              </div>
+              <div class="budget-card-remain">
+                ${budgetWarning ? icon('alert-triangle', { size: 14, color: 'var(--bb-pink)' }) : ''}
+                <span>剩 ${formatMoney(totalRemain)}</span>
+              </div>
+            </div>
+            <div class="budget-card-amounts">
+              <span class="budget-card-spent">${formatMoney(totalSpent)}</span>
+              <span class="budget-card-total">/ ${formatMoney(totalBudget)}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${totalPct}%;background:${budgetWarning ? 'var(--bb-pink)' : (totalPct >= 60 ? 'var(--bb-teal)' : 'var(--bb-pink)')};"></div>
+            </div>
+          </div>
+        ` : '<p style="color:var(--bb-gray);font-size:13px;">暂无预算，去我的页面设置</p>'}
       </div>
     </section>
 
@@ -187,8 +214,8 @@ function renderTxRow(tx) {
   const cat = getCategory(tx.type, tx.category);
   const sign = tx.type === 'income' ? '+' : '-';
   const color = tx.type === 'income' ? 'var(--bb-teal)' : 'var(--bb-pink)';
-  const label = tx.note ? `${cat.name} · ${tx.note}` : cat.name;
   const time = tx.time || '';
+  const noteLine = tx.note ? tx.note : (time || null);
 
   return `
     <div class="tx-row" data-action="tx-options" data-id="${tx.id}">
@@ -196,8 +223,8 @@ function renderTxRow(tx) {
         ${icon(cat.icon, { size: 20, color: cat.color })}
       </div>
       <div class="tx-row-main">
-        <div class="tx-row-title truncate">${label}</div>
-        <div class="tx-row-time truncate">${time}</div>
+        <div class="tx-row-title truncate">${cat.name}</div>
+        <div class="tx-row-time truncate">${noteLine}</div>
       </div>
       <div class="tx-row-amount" style="color:${color};">${sign}${formatMoney(tx.amount)}</div>
     </div>
@@ -428,7 +455,7 @@ export async function renderAdd(state) {
         <span class="blink-cursor" style="display:inline-block;width:3px;height:40px;background:var(--bb-ink);margin-left:2px;"></span>
       </div>
       <p class="amount-hint">点击输入金额</p>
-      <input type="number" inputmode="decimal" data-input="amount" value="${amount === '0' ? '' : amount}" placeholder="0" style="position:absolute;inset:0;opacity:0;z-index:2;">
+      <input type="text" inputmode="decimal" data-input="amount" value="${amount === '0' ? '' : amount}" placeholder="0" style="position:absolute;inset:0;opacity:0;z-index:2;">
     </div>
 
     <div class="nb-animate-pop nb-delay-3">
@@ -480,7 +507,7 @@ function formatAmount(amount) {
 // ===== Budget =====
 export async function renderBudget(state) {
   const transactions = await getTransactions();
-  const budgets = await getBudgets();
+  const totalBudget = await getTotalBudget();
   const now = new Date();
   const start = firstDayOfMonth(now);
   const end = lastDayOfMonth(now);
@@ -490,17 +517,13 @@ export async function renderBudget(state) {
     return d >= start && d <= end && t.type === 'expense';
   });
 
-  const totalBudget = budgets.reduce((s, b) => s + b.amount, 0);
   const totalSpent = monthly.reduce((s, t) => s + t.amount, 0);
   const totalRemain = totalBudget - totalSpent;
   const totalPct = totalBudget > 0 ? Math.min(100, Math.round((totalSpent / totalBudget) * 100)) : 0;
+  const warning = totalBudget > 0 && totalPct >= 80;
 
   return `
-    ${backHeader('预算管理', `
-      <button class="nb-icon-btn" style="width:40px;height:40px;background:var(--bb-yellow);" data-action="add-budget" aria-label="添加预算">
-        ${icon('plus', { size: 20 })}
-      </button>
-    `)}
+    ${backHeader('预算管理')}
 
     <div class="nb-card budget-overview nb-animate-pop nb-delay-1" style="background:var(--bb-purple);color:#fff;">
       <div class="budget-overview-header">本月总预算</div>
@@ -514,18 +537,13 @@ export async function renderBudget(state) {
       </div>
     </div>
 
-    <div class="flex items-center justify-between nb-animate-pop nb-delay-2" style="margin-bottom:12px;">
-      <h2 class="section-title-sm">分类预算</h2>
-      <span style="font-size:11px;color:var(--bb-gray);">共 ${budgets.length} 项</span>
+    <div class="nb-animate-pop nb-delay-3" style="margin-top:20px;">
+      ${totalBudget === 0 ? '<p style="color:var(--bb-gray);font-size:13px;text-align:center;margin-top:20px;">暂无预算，去我的页面设置</p>' : ''}
     </div>
 
-    <div class="nb-animate-pop nb-delay-3">
-      ${budgets.length === 0 ? emptyState('暂无分类预算') : budgets.map(b => renderBudgetCatCard(b, monthly)).join('')}
-    </div>
-
-    <div class="nb-animate-pop nb-delay-5" style="margin-top:18px;">
+    <div class="nb-animate-pop nb-delay-5" style="margin-top:24px;">
       <button class="nb-btn w-full flex items-center justify-between" style="height:48px;padding:0 16px;background:var(--bb-card);" data-action="nav" data-target="profile">
-        <span class="flex items-center gap-2">${icon('user', { size: 18 })}<span>我的</span></span>
+        <span class="flex items-center gap-2">${icon('user', { size: 18 })}<span>去设置预算</span></span>
         ${icon('chevron-right', { size: 18 })}
       </button>
     </div>
@@ -569,6 +587,7 @@ export async function renderProfile(state) {
   const transactions = await getTransactions();
   const settings = await getSettings();
   const userProfile = await getUserProfile();
+  const totalBudget = await getTotalBudget();
   const firstOpen = settings.firstOpenDate ? new Date(settings.firstOpenDate) : new Date();
   const days = Math.max(1, Math.floor((Date.now() - firstOpen.getTime()) / (1000 * 60 * 60 * 24)));
   const nickname = userProfile.nickname || '点击设置昵称';
@@ -615,6 +634,22 @@ export async function renderProfile(state) {
         </div>
       </div>
     </div>
+
+    <section style="margin-bottom:24px;">
+      <h2 class="section-title-sm nb-animate-pop nb-delay-2">月预算</h2>
+      <div class="nb-animate-pop nb-delay-2">
+        <button class="profile-action w-full" data-action="edit-budget" style="background:var(--bb-card);border:3px solid var(--bb-ink);border-radius:12px;box-shadow:4px 4px 0 var(--bb-ink);padding:16px;display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;">
+          <div class="profile-action-icon" style="background:var(--bb-purple);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            ${icon('wallet', { size: 20, color: '#fff' })}
+          </div>
+          <div style="flex:1;min-width:0;text-align:left;">
+            <div class="profile-action-title">月预算：${formatMoney(totalBudget)}</div>
+            <div class="profile-action-sub">点击设置月度预算</div>
+          </div>
+          ${icon('chevron-right', { size: 18, color: 'var(--bb-gray)' })}
+        </button>
+      </div>
+    </section>
 
     <section style="margin-bottom:24px;">
       <h2 class="section-title-sm nb-animate-pop nb-delay-2">数据管理</h2>
@@ -766,12 +801,17 @@ export function attachEvents(main, state, navigate, refresh) {
     });
   }
 
-  // Amount input: hidden numeric field drives the display
+  // Amount input: hidden text field drives the display
   const amountInput = main.querySelector('[data-input="amount"]');
   if (amountInput) {
     amountInput.addEventListener('input', e => {
       let val = e.target.value;
-      // Keep digits and at most one decimal point with 2 decimal places
+      if (val === '' || val === '.') {
+        state.amount = '';
+        const display = main.querySelector('[data-amount-display]');
+        if (display) display.textContent = '0.00';
+        return;
+      }
       val = val.replace(/[^0-9.]/g, '');
       const parts = val.split('.');
       if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
@@ -835,12 +875,6 @@ export function attachEvents(main, state, navigate, refresh) {
     navigate('home');
   });
 
-  // Budget events
-  main.querySelector('[data-action="add-budget"]')?.addEventListener('click', () => openBudgetModal(null, refresh));
-  main.querySelectorAll('[data-action="edit-budget"]').forEach(el => {
-    el.addEventListener('click', () => openBudgetModal(el.dataset.category, refresh));
-  });
-
   // Profile: avatar upload
   const avatarWrap = main.querySelector('[data-action="change-avatar"]');
   const avatarInput = main.querySelector('[data-action="avatar-input"]');
@@ -895,6 +929,9 @@ export function attachEvents(main, state, navigate, refresh) {
   if (genderRow) {
     genderRow.addEventListener('click', () => openGenderPicker(refresh));
   }
+
+  // Profile: edit budget (open modal)
+  main.querySelector('[data-action="edit-budget"]')?.addEventListener('click', () => openTotalBudgetModal(refresh));
 
   // Profile: export / import / clear
   main.querySelector('[data-action="export-data"]')?.addEventListener('click', handleExport);
@@ -990,6 +1027,34 @@ async function openGenderPicker(refresh) {
       showToast('性别已更新');
       refresh();
     });
+  });
+}
+
+async function openTotalBudgetModal(refresh) {
+  const currentBudget = await getTotalBudget();
+
+  openModal(`
+    <h3 class="modal-title">设置月预算</h3>
+    <p style="font-size:13px;color:var(--bb-gray);margin-bottom:16px;">设置当月总预算，所有支出会自动从预算中扣除</p>
+    <label style="display:block;font-family:var(--font-title);font-size:14px;font-weight:700;margin-bottom:8px;">月度预算金额</label>
+    <input type="text" inputmode="decimal" class="nb-input" style="width:100%;height:48px;padding:0 14px;box-sizing:border-box;font-size:16px;" value="${currentBudget > 0 ? currentBudget : ''}" placeholder="输入预算金额" data-input="budget-amount">
+    <div class="modal-actions" style="margin-top:20px;">
+      <button class="nb-btn nb-btn-sm" style="background:var(--bb-line);color:var(--bb-ink);" data-modal-action="cancel">取消</button>
+      <button class="nb-btn" style="background:var(--bb-purple);color:#fff;" data-modal-action="save-budget">保存</button>
+    </div>
+  `);
+
+  document.querySelector('[data-modal-action="save-budget"]')?.addEventListener('click', async () => {
+    const input = document.querySelector('[data-input="budget-amount"]');
+    const val = parseFloat(input?.value || '0');
+    if (isNaN(val) || val < 0) {
+      showToast('请输入有效金额');
+      return;
+    }
+    await saveTotalBudget(val);
+    closeModal();
+    showToast('预算已更新');
+    refresh();
   });
 }
 

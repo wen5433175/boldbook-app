@@ -117,6 +117,17 @@ export async function deleteTransaction(id) {
   await setJson(STORAGE_KEYS.transactions, filtered);
 }
 
+export async function getTotalBudget() {
+  const settings = await getSettings();
+  return settings.monthlyBudget || 0;
+}
+
+export async function saveTotalBudget(amount) {
+  const settings = await getSettings();
+  settings.monthlyBudget = amount;
+  await setJson(STORAGE_KEYS.settings, settings);
+}
+
 export async function getBudgets() {
   return await getJson(STORAGE_KEYS.budgets, []);
 }
