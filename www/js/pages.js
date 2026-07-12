@@ -646,7 +646,6 @@ export async function renderProfile(state) {
             <div class="profile-action-title">月预算：${formatMoney(totalBudget)}</div>
             <div class="profile-action-sub">点击设置月度预算</div>
           </div>
-          ${icon('chevron-right', { size: 18, color: 'var(--bb-gray)' })}
         </button>
       </div>
     </section>
