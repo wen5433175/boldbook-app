@@ -420,11 +420,6 @@ export async function renderStats(state) {
         ${trend.map(t => `<span class="bar-label-item">${t.month}月</span>`).join('')}
       </div>
     </div>
-
-    <button class="nb-btn nb-animate-pop nb-delay-5 w-full flex items-center justify-between" style="height:48px;padding:0 16px;background:var(--bb-purple);color:#fff;" data-action="nav" data-target="budget">
-      <span class="flex items-center gap-2">${icon('piggy-bank', { size: 20, color: '#fff' })}<span>设置预算</span></span>
-      ${icon('chevron-right', { size: 20, color: '#fff' })}
-    </button>
   `;
 }
 
