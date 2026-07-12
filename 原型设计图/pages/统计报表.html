@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计报表 - BoldBook</title>
+    <style id="theme-vars">
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ===== Core Neobrutalism Colors ===== */
+  --boldbook-background: #FFFBF0;
+  --boldbook-foreground: #111111;
+
+  /* Primary — 亮黄 (highlight / button) */
+  --boldbook-primary: #FFE156;
+  --boldbook-primary-foreground: #111111;
+
+  /* Secondary — warm cream surface */
+  --boldbook-secondary: #F5F0E0;
+  --boldbook-secondary-foreground: #111111;
+
+  /* Accent — 薰衣草紫 (budget / charts) */
+  --boldbook-accent: #9B8BF4;
+  --boldbook-accent-foreground: #FFFFFF;
+
+  /* Destructive — 荧光粉 (expense / warning / delete) */
+  --boldbook-destructive: #FF4F87;
+  --boldbook-destructive-foreground: #FFFFFF;
+
+  /* Income — 电光青 (income / success) */
+  --boldbook-income: #00D4AA;
+  --boldbook-income-foreground: #111111;
+
+  /* Card / Surface */
+  --boldbook-card: #FFFFFF;
+  --boldbook-card-foreground: #111111;
+
+  /* Muted */
+  --boldbook-muted: #F5F0E0;
+  --boldbook-muted-foreground: #6B6B6B;
+
+  /* Border / Input / Ring — all black for Neobrutalism */
+  --boldbook-border: #111111;
+  --boldbook-input: #111111;
+  --boldbook-ring: #111111;
+
+  /* Chart palette */
+  --boldbook-chart-1: #FF4F87;
+  --boldbook-chart-2: #00D4AA;
+  --boldbook-chart-3: #FFE156;
+  --boldbook-chart-4: #9B8BF4;
+  --boldbook-chart-5: #111111;
+
+  /* ===== Radius ===== */
+  --boldbook-radius-small: 8px;
+  --boldbook-radius-medium: 12px;
+  --boldbook-radius-large: 16px;
+
+  /* ===== Typography ===== */
+  --boldbook-font-title: 'Space Grotesk', sans-serif;
+  --boldbook-font-body: 'JetBrains Mono', monospace;
+
+  /* ===== Neobrutalism Shadow System ===== */
+  --boldbook-shadow-sm: 2px 2px 0 #111111;
+  --boldbook-shadow: 4px 4px 0 #111111;
+  --boldbook-shadow-lg: 6px 6px 0 #111111;
+
+  /* ===== Border Width ===== */
+  --boldbook-border-width: 3px;
+}
+
+/* ===== Typography Utility Classes ===== */
+.boldbook-title { font-family: 'Space Grotesk', sans-serif; }
+.boldbook-body { font-family: 'JetBrains Mono', monospace; }
+.boldbook-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ===== Neobrutalism Component Utilities ===== */
+.nb-border { border: 3px solid var(--boldbook-border); }
+.nb-border-t { border-top: 3px solid var(--boldbook-border); }
+.nb-border-b { border-bottom: 3px solid var(--boldbook-border); }
+.nb-border-l { border-left: 3px solid var(--boldbook-border); }
+.nb-border-r { border-right: 3px solid var(--boldbook-border); }
+
+.nb-shadow { box-shadow: 4px 4px 0 #111111; }
+.nb-shadow-sm { box-shadow: 2px 2px 0 #111111; }
+.nb-shadow-lg { box-shadow: 6px 6px 0 #111111; }
+
+.nb-card {
+  background: var(--boldbook-card);
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-large);
+  box-shadow: 4px 4px 0 #111111;
+}
+
+.nb-btn {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  box-shadow: 4px 4px 0 #111111;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+.nb-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #111111;
+}
+
+.nb-input {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  font-family: 'JetBrains Mono', monospace;
+  background: #FFFFFF;
+}
+
+.nb-tag {
+  border: 2px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-full, 9999px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nb-rotate-1 { transform: rotate(-1deg); }
+.nb-rotate-2 { transform: rotate(1.5deg); }
+.nb-rotate-3 { transform: rotate(-2deg); }
+
+/* ===== Stagger Animation ===== */
+@keyframes nb-pop-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.nb-animate-pop {
+  animation: nb-pop-in 0.4s ease-out both;
+}
+
+.nb-delay-1 { animation-delay: 0.08s; }
+.nb-delay-2 { animation-delay: 0.16s; }
+.nb-delay-3 { animation-delay: 0.24s; }
+.nb-delay-4 { animation-delay: 0.32s; }
+.nb-delay-5 { animation-delay: 0.40s; }
+
+/* ===== Scrollbar ===== */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== Base Body ===== */
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--boldbook-background);
+  color: var(--boldbook-foreground);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--boldbook-background);
+    --color-foreground: var(--boldbook-foreground);
+    --color-card: var(--boldbook-card);
+    --color-card-foreground: var(--boldbook-card-foreground);
+    --color-primary: var(--boldbook-primary);
+    --color-primary-foreground: var(--boldbook-primary-foreground);
+    --color-secondary: var(--boldbook-secondary);
+    --color-secondary-foreground: var(--boldbook-secondary-foreground);
+    --color-muted: var(--boldbook-muted);
+    --color-muted-foreground: var(--boldbook-muted-foreground);
+    --color-accent: var(--boldbook-accent);
+    --color-accent-foreground: var(--boldbook-accent-foreground);
+    --color-destructive: var(--boldbook-destructive);
+    --color-destructive-foreground: var(--boldbook-destructive-foreground);
+    --color-border: var(--boldbook-border);
+    --color-input: var(--boldbook-input);
+    --color-ring: var(--boldbook-ring);
+    --color-chart-1: var(--boldbook-chart-1);
+    --color-chart-2: var(--boldbook-chart-2);
+    --color-chart-3: var(--boldbook-chart-3);
+    --color-chart-4: var(--boldbook-chart-4);
+    --color-chart-5: var(--boldbook-chart-5);
+    --radius-sm: var(--boldbook-radius-small);
+    --radius-md: var(--boldbook-radius-medium);
+    --radius-lg: var(--boldbook-radius-large);
+  }
+  @layer base {
+    body { background: var(--boldbook-background); color: var(--boldbook-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- ===== Page-specific Chart Styles ===== -->
+      <style>
+        .donut-chart {
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          border: 3px solid #111111;
+          background: conic-gradient(
+            #FF4F87 0% 35%,
+            #FFE156 35% 60%,
+            #00D4AA 60% 75%,
+            #9B8BF4 75% 90%,
+            #111111 90% 100%
+          );
+          position: relative;
+          margin: 0 auto;
+        }
+        .donut-center {
+          position: absolute;
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%);
+          width: 120px; height: 120px;
+          border-radius: 50%;
+          background: #FFFFFF;
+          border: 3px solid #111111;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+        }
+        .bar-chart {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-around;
+          height: 130px;
+          gap: 8px;
+        }
+        .bar-group {
+          display: flex;
+          gap: 0;
+          align-items: flex-end;
+        }
+        .bar-column {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+        }
+        .bar-amount {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 9px;
+          font-weight: 700;
+          white-space: nowrap;
+          line-height: 1.1;
+        }
+        .bar {
+          width: 16px;
+          border-radius: 4px 4px 0 0;
+          border: 2px solid #111111;
+          box-sizing: border-box;
+        }
+        .bar-labels {
+          display: flex;
+          justify-content: space-around;
+          margin-top: 6px;
+          gap: 8px;
+        }
+        .bar-label-item {
+          width: 38px;
+          text-align: center;
+          font-size: 10px;
+          color: #6B6B6B;
+          font-family: 'JetBrains Mono', monospace;
+        }
+        .legend-dot {
+          width: 12px;
+          height: 12px;
+          border: 3px solid #111111;
+          border-radius: 2px;
+          flex-shrink: 0;
+          box-sizing: border-box;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .nb-animate-pop { animation: none !important; }
+        }
+      </style>
+
+      <!-- ===== Mobile Container ===== -->
+      <div style="max-width:375px;margin:0 auto;min-height:100vh;padding:16px;padding-bottom:100px;background:#FFFBF0;">
+
+        <!-- 1. Top Header -->
+        <header class="flex items-center justify-between mb-4">
+          <h1 class="boldbook-title" style="font-size:18px;font-weight:700;">统计报表</h1>
+          <button type="button" class="flex items-center justify-center" style="width:36px;height:36px;border:3px solid #111111;border-radius:12px;background:#FFFFFF;box-shadow:2px 2px 0 #111111;-webkit-tap-highlight-color:transparent;" aria-label="筛选">
+            <i data-lucide="sliders-horizontal" style="width:18px;height:18px;"></i>
+          </button>
+        </header>
+
+        <!-- 2. Time Range Tabs -->
+        <div class="flex gap-2 mb-4">
+          <button type="button" class="boldbook-body flex-1 flex items-center justify-center" style="height:36px;border:2px solid #111111;border-radius:9999px;background:#FFFFFF;font-size:13px;font-weight:500;-webkit-tap-highlight-color:transparent;">本周</button>
+          <button type="button" class="boldbook-title flex-1 flex items-center justify-center" style="height:36px;border:2px solid #111111;border-radius:9999px;background:#FFE156;font-size:13px;font-weight:700;-webkit-tap-highlight-color:transparent;">本月</button>
+          <button type="button" class="boldbook-body flex-1 flex items-center justify-center" style="height:36px;border:2px solid #111111;border-radius:9999px;background:#FFFFFF;font-size:13px;font-weight:500;-webkit-tap-highlight-color:transparent;">本年</button>
+        </div>
+
+        <!-- 3. Summary Cards -->
+        <div class="grid grid-cols-2 gap-3 mb-5">
+          <div class="nb-animate-pop nb-delay-1" style="background:#00D4AA;border:3px solid #111111;border-radius:16px;box-shadow:4px 4px 0 #111111;padding:14px;transform:rotate(-1deg);">
+            <p class="boldbook-body" style="color:#FFFFFF;font-size:11px;font-weight:500;opacity:0.9;">总收入</p>
+            <p class="boldbook-title" style="color:#FFFFFF;font-size:20px;font-weight:700;margin-top:4px;white-space:nowrap;">¥12,580</p>
+          </div>
+          <div class="nb-animate-pop nb-delay-2" style="background:#FF4F87;border:3px solid #111111;border-radius:16px;box-shadow:4px 4px 0 #111111;padding:14px;transform:rotate(1.5deg);">
+            <p class="boldbook-body" style="color:#FFFFFF;font-size:11px;font-weight:500;opacity:0.9;">总支出</p>
+            <p class="boldbook-title" style="color:#FFFFFF;font-size:20px;font-weight:700;margin-top:4px;white-space:nowrap;">¥8,326</p>
+          </div>
+        </div>
+
+        <!-- 4. Expense Donut Chart -->
+        <div class="nb-card nb-animate-pop nb-delay-3" style="padding:20px;margin-bottom:16px;">
+          <h2 class="boldbook-title" style="font-size:14px;font-weight:700;margin-bottom:16px;">支出构成</h2>
+          <div class="donut-chart">
+            <div class="donut-center">
+              <span class="boldbook-body" style="font-size:11px;color:#6B6B6B;">总支出</span>
+              <span class="boldbook-title" style="font-size:20px;font-weight:700;color:#111111;">¥8,326</span>
+            </div>
+          </div>
+
+          <!-- 5. Chart Legend (two columns) -->
+          <div class="grid grid-cols-2 gap-x-4 gap-y-3" style="margin-top:20px;">
+            <div class="flex items-center gap-2">
+              <span class="legend-dot" style="background:#FF4F87;"></span>
+              <span class="boldbook-body" style="font-size:13px;">餐饮</span>
+              <span class="boldbook-mono" style="font-size:13px;font-weight:700;margin-left:auto;white-space:nowrap;">¥2,914</span>
+              <span class="boldbook-body" style="font-size:11px;color:#6B6B6B;white-space:nowrap;">35%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="legend-dot" style="background:#FFE156;"></span>
+              <span class="boldbook-body" style="font-size:13px;">购物</span>
+              <span class="boldbook-mono" style="font-size:13px;font-weight:700;margin-left:auto;white-space:nowrap;">¥2,082</span>
+              <span class="boldbook-body" style="font-size:11px;color:#6B6B6B;white-space:nowrap;">25%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="legend-dot" style="background:#00D4AA;"></span>
+              <span class="boldbook-body" style="font-size:13px;">交通</span>
+              <span class="boldbook-mono" style="font-size:13px;font-weight:700;margin-left:auto;white-space:nowrap;">¥1,249</span>
+              <span class="boldbook-body" style="font-size:11px;color:#6B6B6B;white-space:nowrap;">15%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="legend-dot" style="background:#9B8BF4;"></span>
+              <span class="boldbook-body" style="font-size:13px;">娱乐</span>
+              <span class="boldbook-mono" style="font-size:13px;font-weight:700;margin-left:auto;white-space:nowrap;">¥1,249</span>
+              <span class="boldbook-body" style="font-size:11px;color:#6B6B6B;white-space:nowrap;">15%</span>
+            </div>
+            <div class="flex items-center gap-2 col-span-2">
+              <span class="legend-dot" style="background:#111111;"></span>
+              <span class="boldbook-body" style="font-size:13px;">其他</span>
+              <span class="boldbook-mono" style="font-size:13px;font-weight:700;margin-left:auto;white-space:nowrap;">¥832</span>
+              <span class="boldbook-body" style="font-size:11px;color:#6B6B6B;white-space:nowrap;">10%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Monthly Trend Bar Chart -->
+        <div class="nb-card nb-animate-pop nb-delay-4" style="padding:16px;margin-bottom:16px;">
+          <div class="flex items-center justify-between" style="margin-bottom:16px;">
+            <h2 class="boldbook-title" style="font-size:14px;font-weight:700;">收支趋势</h2>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1">
+                <span style="width:10px;height:10px;background:#00D4AA;border:1.5px solid #111111;border-radius:2px;flex-shrink:0;"></span>
+                <span class="boldbook-body" style="font-size:11px;">收入</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span style="width:10px;height:10px;background:#FF4F87;border:1.5px solid #111111;border-radius:2px;flex-shrink:0;"></span>
+                <span class="boldbook-body" style="font-size:11px;">支出</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-group">
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#00D4AA;">¥3,250</div>
+                <div class="bar" style="height:88px;background:#00D4AA;"></div>
+              </div>
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#FF4F87;">¥1,890</div>
+                <div class="bar" style="height:68px;background:#FF4F87;"></div>
+              </div>
+            </div>
+            <div class="bar-group">
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#00D4AA;">¥3,680</div>
+                <div class="bar" style="height:100px;background:#00D4AA;"></div>
+              </div>
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#FF4F87;">¥2,240</div>
+                <div class="bar" style="height:79px;background:#FF4F87;"></div>
+              </div>
+            </div>
+            <div class="bar-group">
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#00D4AA;">¥2,980</div>
+                <div class="bar" style="height:84px;background:#00D4AA;"></div>
+              </div>
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#FF4F87;">¥1,720</div>
+                <div class="bar" style="height:62px;background:#FF4F87;"></div>
+              </div>
+            </div>
+            <div class="bar-group">
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#00D4AA;">¥4,180</div>
+                <div class="bar" style="height:107px;background:#00D4AA;"></div>
+              </div>
+              <div class="bar-column">
+                <div class="bar-amount" style="color:#FF4F87;">¥2,080</div>
+                <div class="bar" style="height:74px;background:#FF4F87;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bar-labels">
+            <span class="bar-label-item">4月</span>
+            <span class="bar-label-item">5月</span>
+            <span class="bar-label-item">6月</span>
+            <span class="bar-label-item">7月</span>
+          </div>
+        </div>
+
+        <!-- 7. Budget Link Button -->
+        <button type="button" data-dom-id="link-budget" class="nb-btn nb-animate-pop nb-delay-5 w-full flex items-center justify-between" style="height:48px;padding:0 16px;background:#9B8BF4;color:#FFFFFF;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;-webkit-tap-highlight-color:transparent;">
+          <span class="flex items-center gap-2">
+            <i data-lucide="piggy-bank" style="width:20px;height:20px;color:#FFFFFF;"></i>
+            <span>设置预算</span>
+          </span>
+          <i data-lucide="chevron-right" style="width:20px;height:20px;color:#FFFFFF;"></i>
+        </button>
+
+      </div>
+    </main>
+<!--
+  BoldBook — Bottom Tab Bar Shell Fragment
+  ========================================
+  This is an HTML SNIPPET, not a full document.
+  It contains only the bottom tab bar <nav> and a scoped <style> block.
+  Include this fragment INSIDE a leaf page's <body>.
+  Leaf pages add the .active class to the current tab button.
+
+  Dependencies (loaded by each leaf page's <head>):
+    - Tailwind CSS v4 CDN  (layout/spacing utilities)
+    - Lucide Icons CDN     (lucide@1.7.0 — renders <i data-lucide="...">)
+    - Google Fonts: Space Grotesk + JetBrains Mono
+
+  Design tokens (Neobrutalism):
+    bg #FFFBF0 | ink #111111 | pink #FF4F87 | teal #00D4AA
+    yellow #FFE156 | purple #9B8BF4 | gray #6B6B6B
+    border 3px solid ink | shadow 4px 4px 0 ink (no blur)
+    radius: card 16px | button 12px | pill 9999px
+-->
+<style>
+  :root {
+    --boldbook-bg: #FFFBF0;
+    --boldbook-ink: #111111;
+    --boldbook-pink: #FF4F87;
+    --boldbook-teal: #00D4AA;
+    --boldbook-yellow: #FFE156;
+    --boldbook-purple: #9B8BF4;
+    --boldbook-gray: #6B6B6B;
+    --boldbook-radius-card: 16px;
+    --boldbook-radius-btn: 12px;
+    --boldbook-radius-pill: 9999px;
+    --boldbook-border-w: 3px;
+    --boldbook-shadow: 4px 4px 0 var(--boldbook-ink);
+  }
+
+  /* ---- Tab Bar Container ---- */
+  .boldbook-tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 375px;
+    height: 72px;
+    background: #FFFFFF;
+    border-top: var(--boldbook-border-w) solid var(--boldbook-ink);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 50;
+    box-sizing: border-box;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---- Regular Tab Buttons ---- */
+  .boldbook-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 44px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 6px 0;
+    color: var(--boldbook-gray);
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .boldbook-tab svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+  }
+
+  .boldbook-tab-label {
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* ---- Active Tab State (added by leaf pages via .active) ---- */
+  .boldbook-tab.active {
+    color: var(--boldbook-ink);
+  }
+
+  .boldbook-tab.active .boldbook-tab-label {
+    font-weight: 700;
+  }
+
+  .boldbook-tab.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: var(--boldbook-yellow);
+    border-radius: var(--boldbook-radius-pill);
+  }
+
+  /* ---- Center FAB Button ---- */
+  .boldbook-fab {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--boldbook-radius-pill);
+    background: var(--boldbook-yellow);
+    border: var(--boldbook-border-w) solid var(--boldbook-ink);
+    box-shadow: var(--boldbook-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: translateY(-20px);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .boldbook-fab svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.5;
+    color: var(--boldbook-ink);
+  }
+
+  .boldbook-fab:active {
+    transform: translateY(-16px);
+    box-shadow: 2px 2px 0 var(--boldbook-ink);
+  }
+</style>
+
+<nav class="boldbook-tabbar" aria-label="Bottom navigation">
+  <button class="boldbook-tab" type="button" data-nav-key="home" data-dom-id="tab-home">
+    <i data-lucide="home"></i>
+    <span class="boldbook-tab-label">首页</span>
+  </button>
+
+  <button class="boldbook-tab" type="button" data-nav-key="transactions" data-dom-id="tab-transactions">
+    <i data-lucide="receipt"></i>
+    <span class="boldbook-tab-label">明细</span>
+  </button>
+
+  <button class="boldbook-fab fab" type="button" data-nav-key="add" data-dom-id="tab-add" aria-label="记一笔">
+    <i data-lucide="plus"></i>
+  </button>
+
+  <button class="boldbook-tab active" type="button" data-nav-key="stats" data-dom-id="tab-stats">
+    <i data-lucide="bar-chart-3"></i>
+    <span class="boldbook-tab-label">统计</span>
+  </button>
+
+  <button class="boldbook-tab" type="button" data-nav-key="profile" data-dom-id="tab-profile">
+    <i data-lucide="user"></i>
+    <span class="boldbook-tab-label">我的</span>
+  </button>
+</nav>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

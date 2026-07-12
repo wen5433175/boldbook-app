@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 - BoldBook</title>
+    <style id="theme-vars">
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ===== Core Neobrutalism Colors ===== */
+  --boldbook-background: #FFFBF0;
+  --boldbook-foreground: #111111;
+
+  /* Primary — 亮黄 (highlight / button) */
+  --boldbook-primary: #FFE156;
+  --boldbook-primary-foreground: #111111;
+
+  /* Secondary — warm cream surface */
+  --boldbook-secondary: #F5F0E0;
+  --boldbook-secondary-foreground: #111111;
+
+  /* Accent — 薰衣草紫 (budget / charts) */
+  --boldbook-accent: #9B8BF4;
+  --boldbook-accent-foreground: #FFFFFF;
+
+  /* Destructive — 荧光粉 (expense / warning / delete) */
+  --boldbook-destructive: #FF4F87;
+  --boldbook-destructive-foreground: #FFFFFF;
+
+  /* Income — 电光青 (income / success) */
+  --boldbook-income: #00D4AA;
+  --boldbook-income-foreground: #111111;
+
+  /* Card / Surface */
+  --boldbook-card: #FFFFFF;
+  --boldbook-card-foreground: #111111;
+
+  /* Muted */
+  --boldbook-muted: #F5F0E0;
+  --boldbook-muted-foreground: #6B6B6B;
+
+  /* Border / Input / Ring — all black for Neobrutalism */
+  --boldbook-border: #111111;
+  --boldbook-input: #111111;
+  --boldbook-ring: #111111;
+
+  /* Chart palette */
+  --boldbook-chart-1: #FF4F87;
+  --boldbook-chart-2: #00D4AA;
+  --boldbook-chart-3: #FFE156;
+  --boldbook-chart-4: #9B8BF4;
+  --boldbook-chart-5: #111111;
+
+  /* ===== Radius ===== */
+  --boldbook-radius-small: 8px;
+  --boldbook-radius-medium: 12px;
+  --boldbook-radius-large: 16px;
+
+  /* ===== Typography ===== */
+  --boldbook-font-title: 'Space Grotesk', sans-serif;
+  --boldbook-font-body: 'JetBrains Mono', monospace;
+
+  /* ===== Neobrutalism Shadow System ===== */
+  --boldbook-shadow-sm: 2px 2px 0 #111111;
+  --boldbook-shadow: 4px 4px 0 #111111;
+  --boldbook-shadow-lg: 6px 6px 0 #111111;
+
+  /* ===== Border Width ===== */
+  --boldbook-border-width: 3px;
+}
+
+/* ===== Typography Utility Classes ===== */
+.boldbook-title { font-family: 'Space Grotesk', sans-serif; }
+.boldbook-body { font-family: 'JetBrains Mono', monospace; }
+.boldbook-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ===== Neobrutalism Component Utilities ===== */
+.nb-border { border: 3px solid var(--boldbook-border); }
+.nb-border-t { border-top: 3px solid var(--boldbook-border); }
+.nb-border-b { border-bottom: 3px solid var(--boldbook-border); }
+.nb-border-l { border-left: 3px solid var(--boldbook-border); }
+.nb-border-r { border-right: 3px solid var(--boldbook-border); }
+
+.nb-shadow { box-shadow: 4px 4px 0 #111111; }
+.nb-shadow-sm { box-shadow: 2px 2px 0 #111111; }
+.nb-shadow-lg { box-shadow: 6px 6px 0 #111111; }
+
+.nb-card {
+  background: var(--boldbook-card);
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-large);
+  box-shadow: 4px 4px 0 #111111;
+}
+
+.nb-btn {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  box-shadow: 4px 4px 0 #111111;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+.nb-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #111111;
+}
+
+.nb-input {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  font-family: 'JetBrains Mono', monospace;
+  background: #FFFFFF;
+}
+
+.nb-tag {
+  border: 2px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-full, 9999px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nb-rotate-1 { transform: rotate(-1deg); }
+.nb-rotate-2 { transform: rotate(1.5deg); }
+.nb-rotate-3 { transform: rotate(-2deg); }
+
+/* ===== Stagger Animation ===== */
+@keyframes nb-pop-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.nb-animate-pop {
+  animation: nb-pop-in 0.4s ease-out both;
+}
+
+.nb-delay-1 { animation-delay: 0.08s; }
+.nb-delay-2 { animation-delay: 0.16s; }
+.nb-delay-3 { animation-delay: 0.24s; }
+.nb-delay-4 { animation-delay: 0.32s; }
+.nb-delay-5 { animation-delay: 0.40s; }
+
+/* ===== Scrollbar ===== */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== Base Body ===== */
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--boldbook-background);
+  color: var(--boldbook-foreground);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--boldbook-background);
+    --color-foreground: var(--boldbook-foreground);
+    --color-card: var(--boldbook-card);
+    --color-card-foreground: var(--boldbook-card-foreground);
+    --color-primary: var(--boldbook-primary);
+    --color-primary-foreground: var(--boldbook-primary-foreground);
+    --color-secondary: var(--boldbook-secondary);
+    --color-secondary-foreground: var(--boldbook-secondary-foreground);
+    --color-muted: var(--boldbook-muted);
+    --color-muted-foreground: var(--boldbook-muted-foreground);
+    --color-accent: var(--boldbook-accent);
+    --color-accent-foreground: var(--boldbook-accent-foreground);
+    --color-destructive: var(--boldbook-destructive);
+    --color-destructive-foreground: var(--boldbook-destructive-foreground);
+    --color-border: var(--boldbook-border);
+    --color-input: var(--boldbook-input);
+    --color-ring: var(--boldbook-ring);
+    --color-chart-1: var(--boldbook-chart-1);
+    --color-chart-2: var(--boldbook-chart-2);
+    --color-chart-3: var(--boldbook-chart-3);
+    --color-chart-4: var(--boldbook-chart-4);
+    --color-chart-5: var(--boldbook-chart-5);
+    --radius-sm: var(--boldbook-radius-small);
+    --radius-md: var(--boldbook-radius-medium);
+    --radius-lg: var(--boldbook-radius-large);
+  }
+  @layer base {
+    body { background: var(--boldbook-background); color: var(--boldbook-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <style>
+        /* ---- Profile page scoped interactions ---- */
+        .pf-header-btn { transition: transform .1s ease, box-shadow .1s ease; -webkit-tap-highlight-color: transparent; }
+        .pf-header-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #111; }
+        .pf-header-btn:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+
+        .pf-user-card { transform: rotate(-1deg); transition: transform .15s ease; }
+
+        .pf-action { transition: transform .12s ease, box-shadow .12s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; appearance: none; -webkit-appearance: none; font-family: 'JetBrains Mono', monospace; }
+        .pf-action:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+        .pf-export { transform: rotate(-1deg); }
+        .pf-export:active { transform: translate(3px,3px) rotate(-1deg); box-shadow: 1px 1px 0 #111; }
+        .pf-import { transform: rotate(1.5deg); }
+        .pf-import:active { transform: translate(3px,3px) rotate(1.5deg); box-shadow: 1px 1px 0 #111; }
+
+        .pf-danger { transition: transform .12s ease, box-shadow .12s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; appearance: none; -webkit-appearance: none; font-family: 'JetBrains Mono', monospace; }
+        .pf-danger:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 #111; }
+        .pf-danger:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+
+        .pf-row { transition: background .12s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .pf-row:hover { background: #FFFBF0; }
+        .pf-row:active { background: #FFE156; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .pf-user-card, .pf-action, .pf-export, .pf-import, .pf-danger, .pf-row, .pf-header-btn,
+          .nb-animate-pop, .nb-delay-1, .nb-delay-2, .nb-delay-3, .nb-delay-4, .nb-delay-5 {
+            animation: none !important; transition: none !important;
+          }
+        }
+      </style>
+
+      <div style="max-width:375px;margin:0 auto;min-height:100vh;padding:16px;padding-bottom:100px;background:#FFFBF0;">
+
+        <!-- 1. Top Header -->
+        <header class="nb-animate-pop" style="display:flex;align-items:center;margin-bottom:24px;">
+          <h1 class="boldbook-title" style="font-size:18px;font-weight:700;color:#111;letter-spacing:-.02em;line-height:1;">我的</h1>
+        </header>
+
+        <!-- 2. User Info Card -->
+        <div class="nb-animate-pop nb-delay-1" style="margin-bottom:24px;">
+          <div class="pf-user-card" style="background:#FFE156;border:3px solid #111;border-radius:16px;box-shadow:4px 4px 0 #111;padding:20px;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:56px;height:56px;border-radius:50%;background:#FFF;border:3px solid #111;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span class="boldbook-title" style="font-size:24px;font-weight:700;color:#111;line-height:1;">B</span>
+              </div>
+              <div style="min-width:0;flex:1;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <div class="boldbook-title" style="font-size:16px;font-weight:700;color:#111;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">小明</div>
+                  <span class="nb-tag" style="background:#E8F5FF;border-color:#111;font-size:10px;padding:1px 8px;">
+                    <i data-lucide="mars" style="width:12px;height:12px;color:#111;"></i>
+                    男
+                  </span>
+                </div>
+                <div class="boldbook-body" style="font-size:11px;color:#6B6B6B;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">开始记账 2025 · 离线使用</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px;padding-top:14px;border-top:2px dashed rgba(17,17,17,.25);">
+              <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#FFF;border:2px solid #111;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i data-lucide="receipt" style="width:15px;height:15px;color:#111;"></i>
+                </div>
+                <span class="boldbook-body" style="font-size:13px;font-weight:700;color:#111;white-space:nowrap;">286 笔记账</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#FFF;border:2px solid #111;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i data-lucide="calendar" style="width:15px;height:15px;color:#111;"></i>
+                </div>
+                <span class="boldbook-body" style="font-size:13px;font-weight:700;color:#111;white-space:nowrap;">使用 42 天</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Data Management -->
+        <section style="margin-bottom:24px;">
+          <h2 class="boldbook-title nb-animate-pop nb-delay-2" style="font-size:14px;font-weight:700;color:#111;margin-bottom:12px;">数据管理</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="nb-animate-pop nb-delay-2">
+              <button type="button" class="pf-action pf-export" aria-label="导出数据" style="width:100%;background:#FFF;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+                <div style="width:40px;height:40px;border-radius:50%;background:#00D4AA;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i data-lucide="download" style="width:20px;height:20px;color:#FFF;"></i>
+                </div>
+                <div style="text-align:center;">
+                  <div class="boldbook-title" style="font-size:13px;font-weight:700;color:#111;">导出数据</div>
+                  <div class="boldbook-body" style="font-size:10px;color:#6B6B6B;margin-top:3px;">导出为 JSON</div>
+                </div>
+              </button>
+            </div>
+            <div class="nb-animate-pop nb-delay-2">
+              <button type="button" class="pf-action pf-import" aria-label="导入数据" style="width:100%;background:#FFF;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+                <div style="width:40px;height:40px;border-radius:50%;background:#9B8BF4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i data-lucide="upload" style="width:20px;height:20px;color:#FFF;"></i>
+                </div>
+                <div style="text-align:center;">
+                  <div class="boldbook-title" style="font-size:13px;font-weight:700;color:#111;">导入数据</div>
+                  <div class="boldbook-body" style="font-size:10px;color:#6B6B6B;margin-top:3px;">从文件导入</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Danger Zone -->
+        <section style="margin-bottom:24px;">
+          <h2 class="boldbook-title nb-animate-pop nb-delay-3" style="font-size:14px;font-weight:700;color:#FF4F87;margin-bottom:12px;">危险操作</h2>
+          <button type="button" class="pf-danger nb-animate-pop nb-delay-3" aria-label="清空所有数据" style="width:100%;background:#FF4F87;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;padding:16px;display:flex;align-items:center;gap:14px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:#FFF;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i data-lucide="trash-2" style="width:20px;height:20px;color:#FF4F87;"></i>
+            </div>
+            <div style="flex:1;min-width:0;text-align:left;">
+              <div class="boldbook-title" style="font-size:15px;font-weight:700;color:#FFF;">清空所有数据</div>
+              <div class="boldbook-body" style="font-size:11px;color:rgba(255,255,255,.8);margin-top:3px;">删除所有交易记录，不可恢复</div>
+            </div>
+            <i data-lucide="chevron-right" style="width:20px;height:20px;color:#FFF;flex-shrink:0;"></i>
+          </button>
+        </section>
+
+        <!-- 5. About -->
+        <section style="margin-bottom:8px;">
+          <h2 class="boldbook-title nb-animate-pop nb-delay-4" style="font-size:14px;font-weight:700;color:#111;margin-bottom:12px;">关于</h2>
+          <div class="nb-animate-pop nb-delay-4" style="background:#FFF;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;overflow:hidden;">
+            <div class="pf-row" style="display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;border-bottom:1px solid #E5E5E5;">
+              <span class="boldbook-body" style="font-size:13px;color:#111;">版本</span>
+              <span class="boldbook-body" style="font-size:13px;color:#6B6B6B;">v1.0.0</span>
+            </div>
+            <div class="pf-row" style="display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;border-bottom:1px solid #E5E5E5;">
+              <span class="boldbook-body" style="font-size:13px;color:#111;">隐私政策</span>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#6B6B6B;"></i>
+            </div>
+            <div class="pf-row" style="display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;">
+              <span class="boldbook-body" style="font-size:13px;color:#111;">关于 BoldBook</span>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#6B6B6B;"></i>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+<!--
+  BoldBook — Bottom Tab Bar Shell Fragment
+  ========================================
+  This is an HTML SNIPPET, not a full document.
+  It contains only the bottom tab bar <nav> and a scoped <style> block.
+  Include this fragment INSIDE a leaf page's <body>.
+  Leaf pages add the .active class to the current tab button.
+
+  Dependencies (loaded by each leaf page's <head>):
+    - Tailwind CSS v4 CDN  (layout/spacing utilities)
+    - Lucide Icons CDN     (lucide@1.7.0 — renders <i data-lucide="...">)
+    - Google Fonts: Space Grotesk + JetBrains Mono
+
+  Design tokens (Neobrutalism):
+    bg #FFFBF0 | ink #111111 | pink #FF4F87 | teal #00D4AA
+    yellow #FFE156 | purple #9B8BF4 | gray #6B6B6B
+    border 3px solid ink | shadow 4px 4px 0 ink (no blur)
+    radius: card 16px | button 12px | pill 9999px
+-->
+<style>
+  :root {
+    --boldbook-bg: #FFFBF0;
+    --boldbook-ink: #111111;
+    --boldbook-pink: #FF4F87;
+    --boldbook-teal: #00D4AA;
+    --boldbook-yellow: #FFE156;
+    --boldbook-purple: #9B8BF4;
+    --boldbook-gray: #6B6B6B;
+    --boldbook-radius-card: 16px;
+    --boldbook-radius-btn: 12px;
+    --boldbook-radius-pill: 9999px;
+    --boldbook-border-w: 3px;
+    --boldbook-shadow: 4px 4px 0 var(--boldbook-ink);
+  }
+
+  /* ---- Tab Bar Container ---- */
+  .boldbook-tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 375px;
+    height: 72px;
+    background: #FFFFFF;
+    border-top: var(--boldbook-border-w) solid var(--boldbook-ink);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 50;
+    box-sizing: border-box;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---- Regular Tab Buttons ---- */
+  .boldbook-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 44px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 6px 0;
+    color: var(--boldbook-gray);
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .boldbook-tab svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+  }
+
+  .boldbook-tab-label {
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* ---- Active Tab State (added by leaf pages via .active) ---- */
+  .boldbook-tab.active {
+    color: var(--boldbook-ink);
+  }
+
+  .boldbook-tab.active .boldbook-tab-label {
+    font-weight: 700;
+  }
+
+  .boldbook-tab.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: var(--boldbook-yellow);
+    border-radius: var(--boldbook-radius-pill);
+  }
+
+  /* ---- Center FAB Button ---- */
+  .boldbook-fab {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--boldbook-radius-pill);
+    background: var(--boldbook-yellow);
+    border: var(--boldbook-border-w) solid var(--boldbook-ink);
+    box-shadow: var(--boldbook-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: translateY(-20px);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .boldbook-fab svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.5;
+    color: var(--boldbook-ink);
+  }
+
+  .boldbook-fab:active {
+    transform: translateY(-16px);
+    box-shadow: 2px 2px 0 var(--boldbook-ink);
+  }
+</style>
+
+<nav class="boldbook-tabbar" aria-label="Bottom navigation">
+  <button class="boldbook-tab" type="button" data-nav-key="home" data-dom-id="tab-home">
+    <i data-lucide="home"></i>
+    <span class="boldbook-tab-label">首页</span>
+  </button>
+
+  <button class="boldbook-tab" type="button" data-nav-key="transactions" data-dom-id="tab-transactions">
+    <i data-lucide="receipt"></i>
+    <span class="boldbook-tab-label">明细</span>
+  </button>
+
+  <button class="boldbook-fab fab" type="button" data-nav-key="add" data-dom-id="tab-add" aria-label="记一笔">
+    <i data-lucide="plus"></i>
+  </button>
+
+  <button class="boldbook-tab" type="button" data-nav-key="stats" data-dom-id="tab-stats">
+    <i data-lucide="bar-chart-3"></i>
+    <span class="boldbook-tab-label">统计</span>
+  </button>
+
+  <button class="boldbook-tab active" type="button" data-nav-key="profile" data-dom-id="tab-profile">
+    <i data-lucide="user"></i>
+    <span class="boldbook-tab-label">我的</span>
+  </button>
+</nav>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

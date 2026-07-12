@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页仪表盘 - BoldBook</title>
+    <style id="theme-vars">
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ===== Core Neobrutalism Colors ===== */
+  --boldbook-background: #FFFBF0;
+  --boldbook-foreground: #111111;
+
+  /* Primary — 亮黄 (highlight / button) */
+  --boldbook-primary: #FFE156;
+  --boldbook-primary-foreground: #111111;
+
+  /* Secondary — warm cream surface */
+  --boldbook-secondary: #F5F0E0;
+  --boldbook-secondary-foreground: #111111;
+
+  /* Accent — 薰衣草紫 (budget / charts) */
+  --boldbook-accent: #9B8BF4;
+  --boldbook-accent-foreground: #FFFFFF;
+
+  /* Destructive — 荧光粉 (expense / warning / delete) */
+  --boldbook-destructive: #FF4F87;
+  --boldbook-destructive-foreground: #FFFFFF;
+
+  /* Income — 电光青 (income / success) */
+  --boldbook-income: #00D4AA;
+  --boldbook-income-foreground: #111111;
+
+  /* Card / Surface */
+  --boldbook-card: #FFFFFF;
+  --boldbook-card-foreground: #111111;
+
+  /* Muted */
+  --boldbook-muted: #F5F0E0;
+  --boldbook-muted-foreground: #6B6B6B;
+
+  /* Border / Input / Ring — all black for Neobrutalism */
+  --boldbook-border: #111111;
+  --boldbook-input: #111111;
+  --boldbook-ring: #111111;
+
+  /* Chart palette */
+  --boldbook-chart-1: #FF4F87;
+  --boldbook-chart-2: #00D4AA;
+  --boldbook-chart-3: #FFE156;
+  --boldbook-chart-4: #9B8BF4;
+  --boldbook-chart-5: #111111;
+
+  /* ===== Radius ===== */
+  --boldbook-radius-small: 8px;
+  --boldbook-radius-medium: 12px;
+  --boldbook-radius-large: 16px;
+
+  /* ===== Typography ===== */
+  --boldbook-font-title: 'Space Grotesk', sans-serif;
+  --boldbook-font-body: 'JetBrains Mono', monospace;
+
+  /* ===== Neobrutalism Shadow System ===== */
+  --boldbook-shadow-sm: 2px 2px 0 #111111;
+  --boldbook-shadow: 4px 4px 0 #111111;
+  --boldbook-shadow-lg: 6px 6px 0 #111111;
+
+  /* ===== Border Width ===== */
+  --boldbook-border-width: 3px;
+}
+
+/* ===== Typography Utility Classes ===== */
+.boldbook-title { font-family: 'Space Grotesk', sans-serif; }
+.boldbook-body { font-family: 'JetBrains Mono', monospace; }
+.boldbook-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ===== Neobrutalism Component Utilities ===== */
+.nb-border { border: 3px solid var(--boldbook-border); }
+.nb-border-t { border-top: 3px solid var(--boldbook-border); }
+.nb-border-b { border-bottom: 3px solid var(--boldbook-border); }
+.nb-border-l { border-left: 3px solid var(--boldbook-border); }
+.nb-border-r { border-right: 3px solid var(--boldbook-border); }
+
+.nb-shadow { box-shadow: 4px 4px 0 #111111; }
+.nb-shadow-sm { box-shadow: 2px 2px 0 #111111; }
+.nb-shadow-lg { box-shadow: 6px 6px 0 #111111; }
+
+.nb-card {
+  background: var(--boldbook-card);
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-large);
+  box-shadow: 4px 4px 0 #111111;
+}
+
+.nb-btn {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  box-shadow: 4px 4px 0 #111111;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+.nb-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #111111;
+}
+
+.nb-input {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  font-family: 'JetBrains Mono', monospace;
+  background: #FFFFFF;
+}
+
+.nb-tag {
+  border: 2px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-full, 9999px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nb-rotate-1 { transform: rotate(-1deg); }
+.nb-rotate-2 { transform: rotate(1.5deg); }
+.nb-rotate-3 { transform: rotate(-2deg); }
+
+/* ===== Stagger Animation ===== */
+@keyframes nb-pop-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.nb-animate-pop {
+  animation: nb-pop-in 0.4s ease-out both;
+}
+
+.nb-delay-1 { animation-delay: 0.08s; }
+.nb-delay-2 { animation-delay: 0.16s; }
+.nb-delay-3 { animation-delay: 0.24s; }
+.nb-delay-4 { animation-delay: 0.32s; }
+.nb-delay-5 { animation-delay: 0.40s; }
+
+/* ===== Scrollbar ===== */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== Base Body ===== */
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--boldbook-background);
+  color: var(--boldbook-foreground);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--boldbook-background);
+    --color-foreground: var(--boldbook-foreground);
+    --color-card: var(--boldbook-card);
+    --color-card-foreground: var(--boldbook-card-foreground);
+    --color-primary: var(--boldbook-primary);
+    --color-primary-foreground: var(--boldbook-primary-foreground);
+    --color-secondary: var(--boldbook-secondary);
+    --color-secondary-foreground: var(--boldbook-secondary-foreground);
+    --color-muted: var(--boldbook-muted);
+    --color-muted-foreground: var(--boldbook-muted-foreground);
+    --color-accent: var(--boldbook-accent);
+    --color-accent-foreground: var(--boldbook-accent-foreground);
+    --color-destructive: var(--boldbook-destructive);
+    --color-destructive-foreground: var(--boldbook-destructive-foreground);
+    --color-border: var(--boldbook-border);
+    --color-input: var(--boldbook-input);
+    --color-ring: var(--boldbook-ring);
+    --color-chart-1: var(--boldbook-chart-1);
+    --color-chart-2: var(--boldbook-chart-2);
+    --color-chart-3: var(--boldbook-chart-3);
+    --color-chart-4: var(--boldbook-chart-4);
+    --color-chart-5: var(--boldbook-chart-5);
+    --radius-sm: var(--boldbook-radius-small);
+    --radius-md: var(--boldbook-radius-medium);
+    --radius-lg: var(--boldbook-radius-large);
+  }
+  @layer base {
+    body { background: var(--boldbook-background); color: var(--boldbook-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- ===== Mobile Container ===== -->
+      <div style="max-width:375px;margin:0 auto;min-height:100vh;padding:16px;padding-bottom:100px;background:#FFFBF0;">
+
+        <!-- ===== 1. Top Header ===== -->
+        <header class="flex items-start justify-between mb-5">
+          <div>
+            <h1 class="boldbook-title font-bold text-[20px] leading-none tracking-tight">BoldBook</h1>
+            <p class="boldbook-body text-[13px] text-[#6B6B6B] mt-1.5">7月11日 星期六</p>
+          </div>
+          <button type="button" class="settings-btn w-10 h-10 rounded-full bg-white border-[3px] border-[#111] flex items-center justify-center shrink-0" aria-label="设置">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+          </button>
+        </header>
+
+        <!-- ===== 2. Monthly Overview Cards ===== -->
+        <section class="flex gap-2 mb-6">
+          <!-- Income -->
+          <div class="nb-animate-pop nb-delay-1 flex-1">
+            <div class="ov-card p-2 rounded-2xl border-[3px] border-[#111] nb-shadow nb-rotate-1 h-full" style="background:#00D4AA;color:#fff;">
+              <div class="text-[11px] font-medium opacity-90 whitespace-nowrap">本月收入</div>
+              <div class="boldbook-title font-bold text-[20px] whitespace-nowrap mt-1.5">¥12,580</div>
+              <div class="text-[11px] font-medium flex items-center gap-0.5 mt-1.5">
+                <i data-lucide="arrow-up" class="w-3 h-3"></i><span>12%</span>
+              </div>
+            </div>
+          </div>
+          <!-- Expense -->
+          <div class="nb-animate-pop nb-delay-2 flex-1">
+            <div class="ov-card p-2 rounded-2xl border-[3px] border-[#111] nb-shadow nb-rotate-2 h-full" style="background:#FF4F87;color:#fff;">
+              <div class="text-[11px] font-medium opacity-90 whitespace-nowrap">本月支出</div>
+              <div class="boldbook-title font-bold text-[20px] whitespace-nowrap mt-1.5">¥8,326</div>
+              <div class="text-[11px] font-medium flex items-center gap-0.5 mt-1.5">
+                <i data-lucide="arrow-down" class="w-3 h-3"></i><span>5%</span>
+              </div>
+            </div>
+          </div>
+          <!-- Balance -->
+          <div class="nb-animate-pop nb-delay-3 flex-1">
+            <div class="ov-card p-2 rounded-2xl border-[3px] border-[#111] nb-shadow nb-rotate-1 h-full" style="background:#FFE156;color:#111;">
+              <div class="text-[11px] font-medium opacity-80 whitespace-nowrap">本月结余</div>
+              <div class="boldbook-title font-bold text-[20px] whitespace-nowrap mt-1.5">¥4,254</div>
+              <div class="text-[11px] font-medium mt-1.5">可支配</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== 3. Budget Progress ===== -->
+        <section class="mb-6">
+          <h2 class="boldbook-title font-bold text-[16px] mb-3">预算进度</h2>
+          <div class="space-y-3">
+            <!-- 餐饮 -->
+            <div class="budget-card bg-white rounded-xl border-[3px] border-[#111] p-3 nb-shadow-sm">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style="background:rgba(255,79,135,0.15);">
+                    <i data-lucide="utensils" class="w-4 h-4" style="color:#FF4F87;"></i>
+                  </div>
+                  <span class="font-bold text-[13px]">餐饮</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5" style="color:#FF4F87;"></i>
+                  <span class="text-[11px] text-[#6B6B6B] whitespace-nowrap">剩 ¥600</span>
+                </div>
+              </div>
+              <div class="flex items-baseline justify-between mb-2">
+                <span class="boldbook-body font-bold text-[14px]">¥2,400</span>
+                <span class="text-[11px] text-[#6B6B6B]">/ ¥3,000</span>
+              </div>
+              <div style="height:14px;border:3px solid #111;border-radius:9999px;background:#E5E5E5;overflow:hidden;box-sizing:border-box;">
+                <div style="width:80%;height:100%;background:#FF4F87;border-radius:9999px;"></div>
+              </div>
+            </div>
+            <!-- 交通 -->
+            <div class="budget-card bg-white rounded-xl border-[3px] border-[#111] p-3 nb-shadow-sm">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style="background:rgba(0,212,170,0.15);">
+                    <i data-lucide="car" class="w-4 h-4" style="color:#00D4AA;"></i>
+                  </div>
+                  <span class="font-bold text-[13px]">交通</span>
+                </div>
+                <span class="text-[11px] text-[#6B6B6B] whitespace-nowrap">剩 ¥420</span>
+              </div>
+              <div class="flex items-baseline justify-between mb-2">
+                <span class="boldbook-body font-bold text-[14px]">¥580</span>
+                <span class="text-[11px] text-[#6B6B6B]">/ ¥1,000</span>
+              </div>
+              <div style="height:14px;border:3px solid #111;border-radius:9999px;background:#E5E5E5;overflow:hidden;box-sizing:border-box;">
+                <div style="width:58%;height:100%;background:#00D4AA;border-radius:9999px;"></div>
+              </div>
+            </div>
+            <!-- 购物 -->
+            <div class="budget-card bg-white rounded-xl border-[3px] border-[#111] p-3 nb-shadow-sm">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style="background:rgba(255,79,135,0.15);">
+                    <i data-lucide="shopping-bag" class="w-4 h-4" style="color:#FF4F87;"></i>
+                  </div>
+                  <span class="font-bold text-[13px]">购物</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5" style="color:#FF4F87;"></i>
+                  <span class="text-[11px] text-[#6B6B6B] whitespace-nowrap">剩 ¥300</span>
+                </div>
+              </div>
+              <div class="flex items-baseline justify-between mb-2">
+                <span class="boldbook-body font-bold text-[14px]">¥1,200</span>
+                <span class="text-[11px] text-[#6B6B6B]">/ ¥1,500</span>
+              </div>
+              <div style="height:14px;border:3px solid #111;border-radius:9999px;background:#E5E5E5;overflow:hidden;box-sizing:border-box;">
+                <div style="width:80%;height:100%;background:#FF4F87;border-radius:9999px;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== 4. Recent Transactions ===== -->
+        <section class="mb-6">
+          <h2 class="boldbook-title font-bold text-[16px] mb-3">最近交易</h2>
+          <div class="bg-white rounded-2xl border-[3px] border-[#111] nb-shadow-sm px-3">
+            <!-- Row 1: 餐饮 -->
+            <div class="tx-row flex items-center gap-3 py-3 border-b border-[#E5E5E5]">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style="background:rgba(0,212,170,0.15);">
+                <i data-lucide="utensils" class="w-4 h-4" style="color:#00D4AA;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-[13px] truncate">餐饮 · 午餐</div>
+                <div class="text-[11px] text-[#6B6B6B] truncate">今天 12:30</div>
+              </div>
+              <div class="boldbook-body font-bold text-[14px] whitespace-nowrap" style="color:#FF4F87;">-¥45</div>
+            </div>
+            <!-- Row 2: 收入 -->
+            <div class="tx-row flex items-center gap-3 py-3 border-b border-[#E5E5E5]">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style="background:rgba(0,212,170,0.15);">
+                <i data-lucide="banknote" class="w-4 h-4" style="color:#00D4AA;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-[13px] truncate">收入 · 工资</div>
+                <div class="text-[11px] text-[#6B6B6B] truncate">今天 09:00</div>
+              </div>
+              <div class="boldbook-body font-bold text-[14px] whitespace-nowrap" style="color:#00D4AA;">+¥8,500</div>
+            </div>
+            <!-- Row 3: 交通 -->
+            <div class="tx-row flex items-center gap-3 py-3 border-b border-[#E5E5E5]">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style="background:rgba(155,139,244,0.15);">
+                <i data-lucide="car" class="w-4 h-4" style="color:#9B8BF4;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-[13px] truncate">交通 · 地铁</div>
+                <div class="text-[11px] text-[#6B6B6B] truncate">昨天 18:20</div>
+              </div>
+              <div class="boldbook-body font-bold text-[14px] whitespace-nowrap" style="color:#FF4F87;">-¥12</div>
+            </div>
+            <!-- Row 4: 购物 -->
+            <div class="tx-row flex items-center gap-3 py-3 border-b border-[#E5E5E5]">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style="background:rgba(255,79,135,0.15);">
+                <i data-lucide="shopping-bag" class="w-4 h-4" style="color:#FF4F87;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-[13px] truncate">购物 · 书籍</div>
+                <div class="text-[11px] text-[#6B6B6B] truncate">昨天 15:00</div>
+              </div>
+              <div class="boldbook-body font-bold text-[14px] whitespace-nowrap" style="color:#FF4F87;">-¥89</div>
+            </div>
+            <!-- Row 5: 娱乐 -->
+            <div class="tx-row flex items-center gap-3 py-3">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style="background:rgba(155,139,244,0.15);">
+                <i data-lucide="film" class="w-4 h-4" style="color:#9B8BF4;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-[13px] truncate">娱乐 · 电影票</div>
+                <div class="text-[11px] text-[#6B6B6B] truncate">7月9日</div>
+              </div>
+              <div class="boldbook-body font-bold text-[14px] whitespace-nowrap" style="color:#FF4F87;">-¥60</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ===== Page-specific interaction styles ===== -->
+    <style>
+      .settings-btn { transition: transform 0.1s ease, box-shadow 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+      .settings-btn:active { transform: scale(0.92); }
+      .ov-card { transition: transform 0.15s ease, box-shadow 0.15s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+      .ov-card:active { transform: translate(2px,2px) rotate(0deg); box-shadow: 2px 2px 0 #111; }
+      .budget-card { transition: transform 0.1s ease, box-shadow 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+      .budget-card:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #111; }
+      .tx-row { transition: background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+      .tx-row:active { background-color: #FFFBF0; }
+      @media (prefers-reduced-motion: reduce) {
+        .nb-animate-pop { animation: none !important; }
+        .ov-card, .budget-card, .tx-row, .settings-btn { transition: none !important; }
+      }
+    </style>
+
+    <!-- ===== Shell Fragment: Bottom Tab Bar ===== -->
+    <style>
+      :root {
+        --boldbook-bg: #FFFBF0;
+        --boldbook-ink: #111111;
+        --boldbook-pink: #FF4F87;
+        --boldbook-teal: #00D4AA;
+        --boldbook-yellow: #FFE156;
+        --boldbook-purple: #9B8BF4;
+        --boldbook-gray: #6B6B6B;
+        --boldbook-radius-card: 16px;
+        --boldbook-radius-btn: 12px;
+        --boldbook-radius-pill: 9999px;
+        --boldbook-border-w: 3px;
+        --boldbook-shadow: 4px 4px 0 var(--boldbook-ink);
+      }
+
+      .boldbook-tabbar {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 375px;
+        height: 72px;
+        background: #FFFFFF;
+        border-top: var(--boldbook-border-w) solid var(--boldbook-ink);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 50;
+        box-sizing: border-box;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .boldbook-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        min-height: 44px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        padding: 6px 0;
+        color: var(--boldbook-gray);
+        transition: color 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .boldbook-tab svg {
+        width: 22px;
+        height: 22px;
+        stroke-width: 2;
+      }
+
+      .boldbook-tab-label {
+        font-size: 10px;
+        line-height: 1;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .boldbook-tab.active {
+        color: var(--boldbook-ink);
+      }
+
+      .boldbook-tab.active .boldbook-tab-label {
+        font-weight: 700;
+      }
+
+      .boldbook-tab.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 3px;
+        background: var(--boldbook-yellow);
+        border-radius: var(--boldbook-radius-pill);
+      }
+
+      .boldbook-fab {
+        flex: 0 0 auto;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--boldbook-radius-pill);
+        background: var(--boldbook-yellow);
+        border: var(--boldbook-border-w) solid var(--boldbook-ink);
+        box-shadow: var(--boldbook-shadow);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transform: translateY(-20px);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .boldbook-fab svg {
+        width: 28px;
+        height: 28px;
+        stroke-width: 2.5;
+        color: var(--boldbook-ink);
+      }
+
+      .boldbook-fab:active {
+        transform: translateY(-16px);
+        box-shadow: 2px 2px 0 var(--boldbook-ink);
+      }
+    </style>
+
+    <nav class="boldbook-tabbar" aria-label="Bottom navigation">
+      <button class="boldbook-tab active" type="button" data-nav-key="home" data-dom-id="tab-home">
+        <i data-lucide="home"></i>
+        <span class="boldbook-tab-label">首页</span>
+      </button>
+
+      <button class="boldbook-tab" type="button" data-nav-key="transactions" data-dom-id="tab-transactions">
+        <i data-lucide="receipt"></i>
+        <span class="boldbook-tab-label">明细</span>
+      </button>
+
+      <button class="boldbook-fab fab" type="button" data-nav-key="add" data-dom-id="tab-add" aria-label="记一笔">
+        <i data-lucide="plus"></i>
+      </button>
+
+      <button class="boldbook-tab" type="button" data-nav-key="stats" data-dom-id="tab-stats">
+        <i data-lucide="bar-chart-3"></i>
+        <span class="boldbook-tab-label">统计</span>
+      </button>
+
+      <button class="boldbook-tab" type="button" data-nav-key="profile" data-dom-id="tab-profile">
+        <i data-lucide="user"></i>
+        <span class="boldbook-tab-label">我的</span>
+      </button>
+    </nav>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

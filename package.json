@@ -1,0 +1,25 @@
+{
+  "name": "boldbook-app",
+  "version": "1.0.0",
+  "description": "BoldBook offline personal finance app for Android",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/copy-assets.js",
+    "preview": "node scripts/server.js",
+    "sync": "npx cap sync",
+    "android": "npx cap open android",
+    "build:apk": "npx cap sync && cd android && .\\gradlew.bat assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/preferences": "^7.0.0",
+    "@fontsource/jetbrains-mono": "^5.1.0",
+    "@fontsource/space-grotesk": "^5.1.0",
+    "lucide": "^0.468.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

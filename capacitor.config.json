@@ -1,0 +1,20 @@
+{
+  "appId": "com.boldbook.app",
+  "appName": "BoldBook",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "Preferences": {
+      "group": "boldbook"
+    }
+  },
+  "android": {
+    "buildOptions": {
+      "keystorePath": null,
+      "keystoreAlias": null,
+      "keystorePassword": null,
+      "keystoreAliasPassword": null,
+      "releaseType": "APK"
+    }
+  }
+}

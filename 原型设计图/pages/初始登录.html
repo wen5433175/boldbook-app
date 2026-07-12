@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BoldBook 记账</title>
+    <style id="theme-vars">
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ===== Core Neobrutalism Colors ===== */
+  --boldbook-background: #FFFBF0;
+  --boldbook-foreground: #111111;
+
+  /* Primary — 亮黄 (highlight / button) */
+  --boldbook-primary: #FFE156;
+  --boldbook-primary-foreground: #111111;
+
+  /* Secondary — warm cream surface */
+  --boldbook-secondary: #F5F0E0;
+  --boldbook-secondary-foreground: #111111;
+
+  /* Accent — 薰衣草紫 (budget / charts) */
+  --boldbook-accent: #9B8BF4;
+  --boldbook-accent-foreground: #FFFFFF;
+
+  /* Destructive — 荧光粉 (expense / warning / delete) */
+  --boldbook-destructive: #FF4F87;
+  --boldbook-destructive-foreground: #FFFFFF;
+
+  /* Income — 电光青 (income / success) */
+  --boldbook-income: #00D4AA;
+  --boldbook-income-foreground: #111111;
+
+  /* Card / Surface */
+  --boldbook-card: #FFFFFF;
+  --boldbook-card-foreground: #111111;
+
+  /* Muted */
+  --boldbook-muted: #F5F0E0;
+  --boldbook-muted-foreground: #6B6B6B;
+
+  /* Border / Input / Ring — all black for Neobrutalism */
+  --boldbook-border: #111111;
+  --boldbook-input: #111111;
+  --boldbook-ring: #111111;
+
+  /* Chart palette */
+  --boldbook-chart-1: #FF4F87;
+  --boldbook-chart-2: #00D4AA;
+  --boldbook-chart-3: #FFE156;
+  --boldbook-chart-4: #9B8BF4;
+  --boldbook-chart-5: #111111;
+
+  /* ===== Radius ===== */
+  --boldbook-radius-small: 8px;
+  --boldbook-radius-medium: 12px;
+  --boldbook-radius-large: 16px;
+
+  /* ===== Typography ===== */
+  --boldbook-font-title: 'Space Grotesk', sans-serif;
+  --boldbook-font-body: 'JetBrains Mono', monospace;
+
+  /* ===== Neobrutalism Shadow System ===== */
+  --boldbook-shadow-sm: 2px 2px 0 #111111;
+  --boldbook-shadow: 4px 4px 0 #111111;
+  --boldbook-shadow-lg: 6px 6px 0 #111111;
+
+  /* ===== Border Width ===== */
+  --boldbook-border-width: 3px;
+}
+
+/* ===== Typography Utility Classes ===== */
+.boldbook-title { font-family: 'Space Grotesk', sans-serif; }
+.boldbook-body { font-family: 'JetBrains Mono', monospace; }
+.boldbook-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ===== Neobrutalism Component Utilities ===== */
+.nb-border { border: 3px solid var(--boldbook-border); }
+.nb-border-t { border-top: 3px solid var(--boldbook-border); }
+.nb-border-b { border-bottom: 3px solid var(--boldbook-border); }
+.nb-border-l { border-left: 3px solid var(--boldbook-border); }
+.nb-border-r { border-right: 3px solid var(--boldbook-border); }
+
+.nb-shadow { box-shadow: 4px 4px 0 #111111; }
+.nb-shadow-sm { box-shadow: 2px 2px 0 #111111; }
+.nb-shadow-lg { box-shadow: 6px 6px 0 #111111; }
+
+.nb-card {
+  background: var(--boldbook-card);
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-large);
+  box-shadow: 4px 4px 0 #111111;
+}
+
+.nb-btn {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  box-shadow: 4px 4px 0 #111111;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+.nb-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #111111;
+}
+
+.nb-input {
+  border: 3px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-medium);
+  font-family: 'JetBrains Mono', monospace;
+  background: #FFFFFF;
+}
+
+.nb-tag {
+  border: 2px solid var(--boldbook-border);
+  border-radius: var(--boldbook-radius-full, 9999px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nb-rotate-1 { transform: rotate(-1deg); }
+.nb-rotate-2 { transform: rotate(1.5deg); }
+.nb-rotate-3 { transform: rotate(-2deg); }
+
+/* ===== Stagger Animation ===== */
+@keyframes nb-pop-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.nb-animate-pop {
+  animation: nb-pop-in 0.4s ease-out both;
+}
+
+.nb-delay-1 { animation-delay: 0.08s; }
+.nb-delay-2 { animation-delay: 0.16s; }
+.nb-delay-3 { animation-delay: 0.24s; }
+.nb-delay-4 { animation-delay: 0.32s; }
+.nb-delay-5 { animation-delay: 0.40s; }
+
+/* ===== Scrollbar ===== */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== Base Body ===== */
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--boldbook-background);
+  color: var(--boldbook-foreground);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--boldbook-background);
+    --color-foreground: var(--boldbook-foreground);
+    --color-card: var(--boldbook-card);
+    --color-card-foreground: var(--boldbook-card-foreground);
+    --color-primary: var(--boldbook-primary);
+    --color-primary-foreground: var(--boldbook-primary-foreground);
+    --color-secondary: var(--boldbook-secondary);
+    --color-secondary-foreground: var(--boldbook-secondary-foreground);
+    --color-muted: var(--boldbook-muted);
+    --color-muted-foreground: var(--boldbook-muted-foreground);
+    --color-accent: var(--boldbook-accent);
+    --color-accent-foreground: var(--boldbook-accent-foreground);
+    --color-destructive: var(--boldbook-destructive);
+    --color-destructive-foreground: var(--boldbook-destructive-foreground);
+    --color-border: var(--boldbook-border);
+    --color-input: var(--boldbook-input);
+    --color-ring: var(--boldbook-ring);
+    --color-chart-1: var(--boldbook-chart-1);
+    --color-chart-2: var(--boldbook-chart-2);
+    --color-chart-3: var(--boldbook-chart-3);
+    --color-chart-4: var(--boldbook-chart-4);
+    --color-chart-5: var(--boldbook-chart-5);
+    --radius-sm: var(--boldbook-radius-small);
+    --radius-md: var(--boldbook-radius-medium);
+    --radius-lg: var(--boldbook-radius-large);
+  }
+  @layer base {
+    body { background: var(--boldbook-background); color: var(--boldbook-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <style>
+        .lg-gender-btn { transition: transform .1s ease, box-shadow .1s ease, background .15s ease; -webkit-tap-highlight-color: transparent; font-family: 'Space Grotesk', sans-serif; cursor: pointer; }
+        .lg-gender-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #111; }
+        .lg-gender-btn.selected { background: #FFE156; }
+        .lg-submit:active { transform: translate(4px,4px); box-shadow: 0 0 0 #111; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .lg-gender-btn, .lg-submit, .nb-animate-pop { animation: none !important; transition: none !important; }
+        }
+      </style>
+
+      <div style="max-width:375px;margin:0 auto;min-height:100vh;padding:32px 24px;background:#FFFBF0;display:flex;flex-direction:column;justify-content:center;">
+
+        <!-- Logo / Brand -->
+        <div class="nb-animate-pop" style="text-align:center;margin-bottom:40px;">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:#FFE156;border:3px solid #111;box-shadow:4px 4px 0 #111;transform:rotate(-3deg);margin-bottom:16px;">
+            <span class="boldbook-title" style="font-size:32px;font-weight:700;color:#111;">B</span>
+          </div>
+          <h1 class="boldbook-title" style="font-size:28px;font-weight:700;color:#111;letter-spacing:-.03em;line-height:1.1;">BoldBook</h1>
+          <p class="boldbook-body" style="font-size:12px;color:#6B6B6B;margin-top:6px;">离线记账 · 清晰明了</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="nb-animate-pop nb-delay-1" style="background:#FFF;border:3px solid #111;border-radius:16px;box-shadow:4px 4px 0 #111;padding:28px 24px;transform:rotate(1deg);margin-bottom:24px;">
+
+          <!-- Nickname -->
+          <div style="margin-bottom:24px;">
+            <label class="boldbook-title" for="nickname" style="display:block;font-size:13px;font-weight:700;color:#111;margin-bottom:8px;">你的昵称</label>
+            <input id="nickname" type="text" class="nb-input" placeholder="输入昵称…" value="小明" style="width:100%;padding:14px 16px;font-size:16px;font-weight:500;outline:none;box-sizing:border-box;">
+          </div>
+
+          <!-- Gender -->
+          <div>
+            <label class="boldbook-title" style="display:block;font-size:13px;font-weight:700;color:#111;margin-bottom:8px;">性别</label>
+            <div style="display:flex;gap:12px;">
+              <button type="button" class="lg-gender-btn selected" style="flex:1;padding:14px;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;background:#FFE156;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <i data-lucide="mars" style="width:18px;height:18px;color:#111;"></i>
+                <span class="boldbook-title" style="font-size:15px;font-weight:600;color:#111;">男</span>
+              </button>
+              <button type="button" class="lg-gender-btn" style="flex:1;padding:14px;border:3px solid #111;border-radius:12px;box-shadow:4px 4px 0 #111;background:#FFF;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <i data-lucide="venus" style="width:18px;height:18px;color:#111;"></i>
+                <span class="boldbook-title" style="font-size:15px;font-weight:600;color:#111;">女</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <button type="button" class="lg-submit nb-btn nb-animate-pop nb-delay-2" data-dom-id="btn-start" style="width:100%;padding:18px 24px;background:#FFE156;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;">
+          <span>开始记账</span>
+          <i data-lucide="arrow-right" style="width:20px;height:20px;color:#111;"></i>
+        </button>
+
+        <!-- Footer -->
+        <p class="boldbook-body nb-animate-pop nb-delay-3" style="text-align:center;font-size:10px;color:#6B6B6B;margin-top:32px;">数据仅存储在本地，无需注册账号</p>
+
+      </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

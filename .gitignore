@@ -1,0 +1,25 @@
+node_modules/
+.android/
+.cordova/
+build/
+*.log
+.DS_Store
+Thumbs.db
+
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/local.properties
+android/captures/
+android/.externalNativeBuild/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Capacitor
+www/assets/fonts/
