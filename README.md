@@ -1,4 +1,4 @@
-# BoldBook 开发全流程文档
+# BoldBook 需求设计文档
 
 > 项目名称：BoldBook（离线个人记账 App）
 > 目标平台：Android（后续可扩展 iOS）
